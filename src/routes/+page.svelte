@@ -10,13 +10,13 @@
 	let ended = false;
 	let endedEarly = false;
 
-	let timeoutId: number;
+	let timeoutId: any;
 	let startTime: number;
 	let endTime: number;
 
 	const timeoutTime = (Math.random() * (MAX_TIMEOUT - MIN_TIMEOUT) + MIN_TIMEOUT) * MS_IN_SECONDS;
 
-	const handleKeyPress = () => {
+	const handleKeyPress = async () => {
 		if (!ended) {
 			ended = true;
 			endedEarly = true;
@@ -27,7 +27,14 @@
 		endTime = new Date().getTime();
 		document.removeEventListener('click', handleKeyPress);
 		document.removeEventListener('keypress', handleKeyPress);
+		await updateDynamoDB();
 	};
+
+	const updateDynamoDB = async () => {
+		await fetch ('/api/dynamodb', {
+			method: 'POST'
+		})
+	}
 
 	const onClick = (event: MouseEvent) => {
 		event.stopPropagation();
