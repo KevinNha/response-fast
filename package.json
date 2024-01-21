@@ -17,6 +17,7 @@
   "devDependencies": {
     "@sveltejs/adapter-auto": "^2.0.0",
     "@sveltejs/kit": "^1.20.4",
+    "@types/uuid": "^9.0.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "autoprefixer": "^10.4.16",
@@ -39,6 +40,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.421.0"
+    "@aws-sdk/client-dynamodb": "^3.496.0",
+    "@aws-sdk/util-dynamodb": "^3.496.0",
+    "uuid": "^9.0.1"
   }
 }

@@ -1,20 +1,23 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import '../app.css';
+	import type { PageData } from './$types';
+	import { v4 as uuidv4 } from 'uuid';
 
 	const MAX_TIMEOUT = 10;
 	const MIN_TIMEOUT = 2;
 	const MS_IN_SECONDS = 1000;
 
-	let isButtonHidden = false;
+	// TODO dont get data from page load but just GET endpoint of leaderbaord
+	export let data: PageData;
+
+	let started = false;
 	let ended = false;
 	let endedEarly = false;
 
 	let timeoutId: any;
 	let startTime: number;
 	let endTime: number;
-
-	const timeoutTime = (Math.random() * (MAX_TIMEOUT - MIN_TIMEOUT) + MIN_TIMEOUT) * MS_IN_SECONDS;
 
 	const handleKeyPress = async () => {
 		if (!ended) {
@@ -27,18 +30,26 @@
 		endTime = new Date().getTime();
 		document.removeEventListener('click', handleKeyPress);
 		document.removeEventListener('keypress', handleKeyPress);
-		await updateDynamoDB();
+		await updateLeaderboard();
 	};
 
-	const updateDynamoDB = async () => {
-		await fetch ('/api/dynamodb', {
-			method: 'POST'
-		})
-	}
+	// TODO need to create a new modal for updating the table IF the time is faster than the top 10 at load
+	// This function should also update the local leaderboard too
+	const updateLeaderboard = async () => {
+		await fetch('/api/leaderboard', {
+			method: 'POST',
+			body: JSON.stringify({
+				responseTime: String(endTime - startTime),
+				nickName: 'sada'
+			})
+		});
+	};
 
-	const onClick = (event: MouseEvent) => {
+	const onGameStart = (event: MouseEvent) => {
+		const timeoutTime = (Math.random() * (MAX_TIMEOUT - MIN_TIMEOUT) + MIN_TIMEOUT) * MS_IN_SECONDS;
+
 		event.stopPropagation();
-		isButtonHidden = !isButtonHidden;
+		started = !started;
 		timeoutId = setTimeout(() => {
 			ended = !ended;
 			startTime = new Date().getTime();
@@ -49,15 +60,18 @@
 	};
 </script>
 
+<svelte:head>
+	<title>React Fast</title>
+</svelte:head>
 <main
 	class="h-screen overscroll-none flex justify-center font-default {ended && !endedEarly
 		? 'bg-gradient-to-r from-[#b0d9b1] to-[#ffffcc]'
 		: 'bg-[#242424]'}"
 >
 	<div class="self-center text-white font-semibold text-base">
-		{#if !isButtonHidden}
-			<button class="rounded-full bg-zinc-900 px-8 py-1.5" on:click={onClick}> Start </button>
-		{:else if isButtonHidden && !ended}
+		{#if !started}
+			<button class="rounded-full bg-zinc-900 px-8 py-1.5" on:click={onGameStart}> Start </button>
+		{:else if started && !ended}
 			<p in:fade={{ delay: 0, duration: 500 }} hidden={ended}>
 				Press any key when the color changes
 			</p>
