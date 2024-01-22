@@ -64,7 +64,7 @@
 	<title>React Fast</title>
 </svelte:head>
 <main
-	class="h-screen overscroll-none flex justify-center font-default {ended && !endedEarly
+	class="h-[93vh] overscroll-none flex justify-center font-default {ended && !endedEarly
 		? 'bg-gradient-to-r from-[#b0d9b1] to-[#ffffcc]'
 		: 'bg-[#242424]'}"
 >

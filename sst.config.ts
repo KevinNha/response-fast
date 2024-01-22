@@ -4,9 +4,9 @@ import { SvelteKitSite, Table } from 'sst/constructs';
 export default {
 	config(_input) {
 		return {
-			name: 'response-fast',
+			name: 'responsefast',
 			region: 'us-east-1',
-			profile: 'default'
+			profile: 'responsefast'
 		};
 	},
 	stacks(app) {
